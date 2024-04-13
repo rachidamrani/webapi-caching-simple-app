@@ -24,24 +24,17 @@ public class EmployeeRepository : IEmployeeRepository
     // Get all employees
     public async Task<IEnumerable<Employee>> GetAllEmployees()
     {
-        string cachkey = "employeesCache";
-        IEnumerable<Employee>? employees;
+        IEnumerable<Employee> employees;
 
-        bool getValueFromCache = _memoryCache.TryGetValue(cachkey, out employees);
+        employees = _memoryCache.Get<IEnumerable<Employee>>("employeesCache")!;
 
-        if (!getValueFromCache)
+        if (employees is not null)
         {
-            // Cach miss : fetch data from databse if the cach is empty
-            employees = await _appDBContext.Employees.ToListAsync();
-
-            // Set cache entry with absolute expiration or sliding expiration
-
-            MemoryCacheEntryOptions cachEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
-            _memoryCache.Set(cachkey, employees, cachEntryOptions);
-
             return employees;
         }
 
+        employees = await _appDBContext.Employees.ToListAsync();
+        _memoryCache.Set("employeesCache", employees, TimeSpan.FromMinutes(1));
         return employees;
     }
 }
