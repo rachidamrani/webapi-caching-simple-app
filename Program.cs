@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +12,7 @@ builder.Services.AddDbContext<AppDBContext>(dbContextOptionsBuilder =>
 });
 builder.Services.AddScoped<AppDBContext>();
 builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddControllers();
 
 
