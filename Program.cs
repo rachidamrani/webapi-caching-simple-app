@@ -10,7 +10,7 @@ builder.Services.AddDbContext<AppDBContext>(dbContextOptionsBuilder =>
             "MyConnectionString")
             );
 });
-builder.Services.AddScoped<AppDBContext>();
+// builder.Services.AddScoped<AppDBContext>();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddControllers();
